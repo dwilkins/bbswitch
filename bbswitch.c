@@ -15,6 +15,7 @@
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
+
  *  the Free Software Foundation, either version 2 of the License, or
  *  (at your option) any later version.
  *
@@ -30,6 +31,7 @@
 
 #include <linux/pci.h>
 #include <linux/acpi.h>
+#include <linux/proc_fs.h>
 #include <linux/module.h>
 #include <asm/uaccess.h>
 #include <linux/suspend.h>
@@ -76,7 +78,7 @@ The next UUID has been found as well in
 https://bugs.launchpad.net/lpbugreporter/+bug/752542:
 
 0xD3, 0x73, 0xD8, 0x7E, 0xD0, 0xC2, 0x4F, 0x4E,
-0xA8, 0x54, 0x0F, 0x13, 0x17, 0xB0, 0x1C, 0x2C 
+0xA8, 0x54, 0x0F, 0x13, 0x17, 0xB0, 0x1C, 0x2C
 It looks like something for Intel GPU:
 http://lxr.linux.no/#linux+v3.1.5/drivers/gpu/drm/i915/intel_acpi.c
  */
@@ -375,12 +377,12 @@ static int bbswitch_pm_handler(struct notifier_block *nbp,
     return 0;
 }
 
-static struct file_operations bbswitch_fops = {
-    .open   = bbswitch_proc_open,
-    .read   = seq_read,
-    .write  = bbswitch_proc_write,
-    .llseek = seq_lseek,
-    .release= single_release
+static struct proc_ops bbswitch_fops = {
+    .proc_open   = bbswitch_proc_open,
+    .proc_read   = seq_read,
+    .proc_write  = bbswitch_proc_write,
+    .proc_lseek = seq_lseek,
+    .proc_release= single_release
 };
 
 static struct notifier_block nb = {
